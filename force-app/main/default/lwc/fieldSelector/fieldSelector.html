@@ -1,0 +1,27 @@
+<template>
+    
+    <!-- if there's an error, display the error message, otherwise display the multi-select box -->
+    <template lwc:if={errorMessage}>
+        {errorMessage}
+    </template>
+    <template lwc:else>
+        <lightning-dual-listbox
+            label="Select the Fields you want to Use"
+            source-label="Available Fields"
+            selected-label="Selected Fields"
+            options={allFieldsList}
+            max="10"
+            onchange={handleSelections}
+        >
+        </lightning-dual-listbox>
+
+        <lightning-button
+            variant="brand"
+            label="Submit"
+            onclick={handleSubmit}
+            disabled={selectedFieldsList.length}
+        >
+        </lightning-button>
+    </template>
+    
+</template>
