@@ -1,16 +1,28 @@
 <template>
     <lightning-card>
 
+        <!-- displays the list of object options as a dropdown menu -->
         <lightning-combobox 
             options={objectsList} 
             value={selectedObject} 
             label="Select the Object to Use"
-            onchange={handleSelection}>
+            onchange={handleSelection}
+            class="slds-var-p-around_small"
+        >
         </lightning-combobox>
 
-
+        <!-- only display the child component when an object is selected -->
         <template lwc:if={objectSelected}>
-            <c-field-selector object-to-use={selectedObject} onfieldsubmit={handleFields}></c-field-selector>
+            <!-- 
+                onfieldsubmit would capture a CustomEvent called 'fieldsubmit' and handle the event in this objectSelector component
+                <c-field-selector object-to-use={selectedObject} onfieldsubmit={handleFields}></c-field-selector>
+            -->
+
+            <div class="slds-var-p-around_small">
+                <c-field-selector object-to-use={selectedObject}></c-field-selector>
+            </div>
+            
         </template>
+
     </lightning-card>
 </template>
