@@ -18,7 +18,7 @@ export default class SearchResults extends LightningElement {
     messageContext;                 // wiring in Lightning Message Service
 
     // calling an apex method to retrieve records from the org
-    @wire(getRecords, {objectName : '$selectedObject', fieldNames : '$selectedFields'})
+    @wire(getRecords, {objectName : '$selectedObject', fieldNames : '$selectedFields'}) 
     wiredRecords(result) {
         if(result.data) {
 

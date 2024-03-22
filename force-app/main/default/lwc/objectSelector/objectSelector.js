@@ -1,5 +1,6 @@
-import { LightningElement } from 'lwc';
-
+import { LightningElement, wire } from 'lwc';
+import { MessageContext, publish } from 'lightning/messageService'
+import OBJECT_SEARCH_CHANNEL from '@salesforce/messageChannel/ObjectSearch__c';
 
 export default class ObjectSelector extends LightningElement {
 
@@ -11,6 +12,8 @@ export default class ObjectSelector extends LightningElement {
         { label : 'Lead', value : 'Lead'}
     ];
 
+    @wire(MessageContext)
+    messageContext;                                     // wiring in Lightning Message Service
 
     // handling when an object is selected from the drop-down
     handleSelection(event) {
@@ -18,4 +21,16 @@ export default class ObjectSelector extends LightningElement {
         this.selectedObject = event.detail.value;
     }
 
+    // handling the custom 'fieldsubmit' event from the child component fieldSelector
+    handleFields(event) {
+
+        // setting the data for the message
+        const payload = {
+            object : this.selectedObject,
+            fields : event.detail.selectedFields
+        }
+
+        // publishing the message
+        publish(this.messageContext, OBJECT_SEARCH_CHANNEL, payload);
+    }
 }

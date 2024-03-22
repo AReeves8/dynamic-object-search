@@ -1,7 +1,5 @@
 import { LightningElement, api, wire } from 'lwc';
 import getObjectFields from '@salesforce/apex/DynamicObjectSearchController.getObjectFields'
-import { MessageContext, publish } from 'lightning/messageService'
-import OBJECT_SEARCH_CHANNEL from '@salesforce/messageChannel/ObjectSearch__c';
 
 export default class FieldSelector extends LightningElement {
 
@@ -11,10 +9,6 @@ export default class FieldSelector extends LightningElement {
     selectedFieldsList = [];        // all fields that have been selected by the user
     errorMessage;                   // text to display if any errors occur
     disableButton = true;           // toggle for submit button
-
-    @wire(MessageContext)
-    messageContext;                 // wiring in Lightning Message Service
-
 
     // calling an apex method to retrieve all the fields for the provided object
     @wire(getObjectFields, {objectName : '$objectToUse'})       // $ makes this action reactive to every change made to objectToUse
@@ -53,22 +47,14 @@ export default class FieldSelector extends LightningElement {
     // broadcast new event when submission occurs
     handleSubmit(event) {
 
-        const payload = {
-            object : this.objectToUse,
-            fields : this.selectedFieldsList
-        }
+        event.preventDefault();
 
-        publish(this.messageContext, OBJECT_SEARCH_CHANNEL, payload);
-        
-        /*
-
-        This is what you would do to send data back up to the parent objectSelector component
-
+        // creating the custom event and setting the data inside of it
         const fieldsSubmitted = new CustomEvent('fieldsubmit', {
-            detail: this.selectedFieldsList
+            detail: { selectedFields : this.selectedFieldsList }    // detail needs to be an object
         });
 
+        // broadcasting the event to be caught by a parent component (objectSelector)
         this.dispatchEvent(fieldsSubmitted);
-        */
     }
 }
